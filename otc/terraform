@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# terraform wrapper...
+
+TERRAFORM=/usr/local/bin/terraform
+
+. ~/.otc/credentials # access credentials
+
+export OTC_OBS_ENDPOINT="https://obs.${OTC_REGION}.otc.t-systems.com"
+export OTC_IAM_ENDPOINT="https://iam.${OTC_REGION}.otc.t-systems.com"
+
+# OTC provider config
+export OS_DOMAIN_NAME=${OTC_DOMAIN}
+export OS_ACCESS_KEY=${OTC_ACCESS_KEY}
+export OS_SECRET_KEY=${OTC_SECRET_KEY}
+export OS_AUTH_URL=${OTC_IAM_ENDPOINT}
+export OS_INSECURE=true
+export OS_REGION_NAME=${OTC_REGION}
+export OS_TENANT_NAME=${OTC_REGION}
+export OS_PROJECT_NAME=${OTC_REGION}_${OTC_PROJECT}
+
+# S3 backend config
+export AWS_ACCESS_KEY_ID=${OTC_ACCESS_KEY}
+export AWS_SECRET_ACCESS_KEY=${OTC_SECRET_KEY}
+export AWS_DEFAULT_REGION=${OTC_REGION}
+export AWS_S3_ENDPOINT=${OTC_OBS_ENDPOINT}
+
+# inject variables
+# TF_VAR_list='[ "us-west-1b", "us-west-1d" ]'
+# TF_VAR_map='{ foo = "bar", baz = "qux" }'
+
+# export TF_LOG=DEBUG
+
+exec ${TERRAFORM} "$@"
